@@ -22,7 +22,6 @@ class TodoCurrenFilter extends _$TodoCurrenFilter {
 }
 
 @Riverpod(keepAlive: true)
-@riverpod
 class Todos extends _$Todos {
   @override
   List<Todo> build() {
@@ -75,4 +74,18 @@ class Todos extends _$Todos {
       return todo;
     }).toList();
   }
+}
+
+@riverpod
+List<Todo> filteredTodos (FilteredTodosRef ref) { 
+ final todos = ref.watch(todosProvider);
+ final filter = ref.watch(todoCurrenFilterProvider);
+ switch (filter) {
+   case FilterType.pending:
+     return todos.where((todo) => !todo.done).toList();
+   case FilterType.completed:
+     return todos.where((todo) => todo.done).toList();
+   default:
+     return todos;
+ }
 }
